@@ -1,0 +1,29 @@
+An EPIRB is a crucial piece of safety equipment.  Someone's life could be placed at risk if it fails or behaves in an unpredictable manner.
+An open EPIRB encourages development and feature enhancement which is a good thing but is potentially at odds with safety.  What if you
+change the user interface and the user can't figure out how to send an SOS?  What if you introduce a bug and unit crashes?
+
+To address this issue, open EPIRB uses a two phase start up.  When you initially power on the device it enters a minimum functionality mode
+during which one of two messages can be sent.  A routine positional update which logs the operator's current GPS location via the Iridium
+Satellite constellation or an SOS message.  After a brief period the minimum functionality phase ends and the full functionality begins.
+In the full functionality phase it is possible to do everything that can be done in the minimum functionality mode as well as sending and
+receiving short text messages, regularly logging position and any other functions that are yet to be thought of.
+
+Every piece of configuration and code necessary to achieve minimum functionality is known as BLACK CODE. To achieve reliability BLACK CODE
+changes are not made trivially.  They should be limited to bug fixes, usability and perhaps improving readibility and understanding of the code.
+Before making a change to BLACK CODE, ask yourself how this enhances the reliability of the unit.  This is an area of minimum functionality and
+not a place to add new features.  Adding a new feature increases the chance of failure and consequently increases the risk that a needed SOS 
+won't be sent.  When it is necessary to make BLACK CODE changes it is essential the changes are thoroughly thought through, tested and approved
+by the client. Any additional libraries, functions or variables must be labelled as BLACK if any BLACK CODE relies on it. 
+
+Only BLACK CODE should run until the end of the minimum functionality period.  In fact, a good test of the code base is to delete everything that
+isn't BLACK and show that an SOS can still be sent.
+
+After the minimum functionality period expires, functionality is deliverd by regular code (non BLACK).  Here careful coding and rigourous testing
+should also occur but development and functionality are encouraged.
+
+REUSE OF BLACK CODE
+The full functionality program space is encouraged to reuse BLACK code as this serves to further exercise and test these crucial components. If there is a
+proposal for substantial changes to be made to BLACK CODE functions, it is recommended that the BLACK CODE functions be replicated in their new form
+and labelled as RED CODE. The full functionality code should then call on the experimental RED CODE to allow debugging and field evaluation to
+occur without jeapordising the stability of the BLACK CODE code base.  Once the RED CODE is thouroughly debugged, tested and documented it can
+be considered for inclusion as BLACK CODE.  Thus the full functionality code becomes a testing environment for the minimum functionality code base.
